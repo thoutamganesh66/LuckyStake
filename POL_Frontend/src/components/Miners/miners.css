@@ -1,0 +1,18 @@
+
+.miner-name
+{
+    font-size:xx-large;
+    font-weight: 600;
+    text-decoration:underline;
+}
+
+.stake-title, .stake-amount,.reward-amount, .reward-title, .blocks-title, .blocks-no
+{
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.miner-details
+{
+    margin-bottom: 1rem;
+}

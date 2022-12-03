@@ -1,0 +1,26 @@
+body
+{
+    color: #000;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.objective-container, .algorithm-container
+{
+    font-weight: 600;
+}
+
+.objective, .alg-step
+{
+    list-style-type:disclosure-closed;
+}
+
+.objective-title, .alg-title
+{
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.alg-pre-step
+{
+    list-style-type: disclosure-open;
+}
