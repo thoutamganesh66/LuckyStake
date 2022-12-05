@@ -12,6 +12,7 @@ const MineBlock = () => {
   const [miner, setMiner] = useState("");
   const [count, setCount] = useState(0);
   const [displayData, setDisplayData] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setData(e.target.value);
   };
@@ -60,6 +61,7 @@ const MineBlock = () => {
   const handleMine = (e) => {
     //hit mine api here...
     // e.preventDefault();
+    setLoading(true);
     const form = new FormData();
     const url = "http://localhost:4000/mining/generateRandom";
     form.append("data", data);
@@ -122,7 +124,7 @@ const MineBlock = () => {
           setDisplayData(false);
           setTimeout(() => {
             handleMine();
-          }, 10000);
+          }, 5000);
         }
       })
       .catch((err) => {
@@ -137,7 +139,15 @@ const MineBlock = () => {
           <h4 className="data-title">Data</h4>
           <textarea rows={20} cols={40} onChange={handleChange} />
           <br />
-          <button className="mine-button mt-5 text-center" onClick={handleMine}>
+          <button
+            className="mine-button mt-5 text-center"
+            onClick={() => {
+              setLoading(true);
+              setTimeout(() => {
+                handleMine();
+              }, 5000);
+            }}
+          >
             Mine
           </button>
         </div>
@@ -183,7 +193,7 @@ const MineBlock = () => {
               <div className="timer-wrapper">
                 <CountdownCircleTimer
                   isPlaying
-                  duration={6}
+                  duration={10}
                   colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
                   colorsTime={[10, 6, 3, 0]}
                   onComplete={() => {
@@ -197,8 +207,12 @@ const MineBlock = () => {
               </div>
             </div>
           </div>
+        ) : loading ? (
+          <div className="mt-4 text-center">
+            <h3 className="loadingBox">Generating Random Numbers...</h3>
+          </div>
         ) : (
-          <div className="loading"></div>
+          <></>
         )}
         {/* {
                     available?

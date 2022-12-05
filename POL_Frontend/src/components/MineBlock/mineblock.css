@@ -69,3 +69,8 @@ textarea:focus {
 {
     margin-left: 8rem;
 }
+
+.loadingBox
+{
+    font-weight: bolder;
+}
