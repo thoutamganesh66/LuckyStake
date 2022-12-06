@@ -21,32 +21,35 @@ const Chain = () =>{
             <div className="container chain-container mt-4">
                 {chain.map(chain=>{
                     return(
-                        <div className="dataBlock">
-                            <table>
-                                <tr>
-                                    <td>Block Height</td>
+                        <div className="dataBlock mb-4">
+                            <table className="table">
+                                <tbody>
+                                    
+                                <tr scope="row">
+                                    <td className="heading-side">Block Height</td>
                                     <td>{chain.BlockNumber}</td>
                                 </tr>
-                                <tr>
-                                    <td>Block Hash</td>
+                                <tr scope="row">
+                                    <td className="heading-side">Block Hash</td>
                                     <td>{chain.BlockHash}</td>
                                 </tr>
                                 <tr>
-                                    <td>Prev Block Hash</td>
+                                    <td className="heading-side">Prev Block Hash</td>
                                     <td>{chain.PreBlockHash}</td>
                                 </tr>
                                 <tr>
-                                    <td>Data</td>
+                                    <td className="heading-side">Data</td>
                                     <td>{chain.data}</td>
                                 </tr>
                                 <tr>
-                                    <td>TimeStamp</td>
+                                    <td className="heading-side">TimeStamp</td>
                                     <td>{chain.timestamp}</td>
                                 </tr>
-                                <tr>
-                                    <td>Miner</td>
+                                <tr >
+                                    <td className="heading-side">Miner</td>
                                     <td>{chain.miner}</td>
                                 </tr>
+                                </tbody>
                             </table>                            
                         </div>
                     )

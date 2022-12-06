@@ -4,8 +4,12 @@ import Navbar from "../Navbar/Navbar";
 import "./mineblock.css";
 // import {Redirect} from "react-router-dom";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MineBlock = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState("");
   const [randomNumbers, setRandomNumbers] = useState();
   const [priorityqueue, setPriorityQueue] = useState([]);
@@ -13,6 +17,7 @@ const MineBlock = () => {
   const [count, setCount] = useState(0);
   const [displayData, setDisplayData] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mined, setMined] = useState(false);
   const handleChange = (e) => {
     setData(e.target.value);
   };
@@ -32,11 +37,11 @@ const MineBlock = () => {
 
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
-      return <div className="timer">Too lale...</div>;
+      return <div className="timer">Too late...</div>;
     }
 
     return (
-      <div className="timer">
+      <div className="timer text-center">
         <div className="text">Remaining</div>
         <div className="value">{remainingTime}</div>
         <div className="text">seconds</div>
@@ -66,22 +71,26 @@ const MineBlock = () => {
     const url = "http://localhost:4000/mining/generateRandom";
     form.append("data", data);
     console.log("formdata is " + form.get("data"));
-    axios
-      .post(url, {
-        BlockData: form.get("data"),
-      })
-      .then((res) => {
-        console.log(
-          "server response for random num generation " + res.data.minermaps
-        );
-        setRandomNumbers(res.data.minermaps);
-        setCount(0);
-        setDisplayData(true);
-        // console.log("random numbers stored: "+randomNumbers);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (data) {
+      axios
+        .post(url, {
+          BlockData: form.get("data"),
+        })
+        .then((res) => {
+          console.log(
+            "server response for random num generation " + res.data.minermaps
+          );
+          setRandomNumbers(res.data.minermaps);
+          setCount(0);
+          setDisplayData(true);
+          // console.log("random numbers stored: "+randomNumbers);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.warning("Please fill required details");
+    }
   };
 
   const successMine = (e) => {
@@ -95,6 +104,7 @@ const MineBlock = () => {
         minerName: form.get("miner"),
       })
       .then((res) => {
+        setMined(true);
         console.log(res);
         window.alert("block added");
       })
@@ -131,13 +141,17 @@ const MineBlock = () => {
         console.log(err);
       });
   };
+  if (mined) {
+    navigate("/chain");
+  }
   return (
     <div>
       <Navbar />
+      <ToastContainer />
       <div className="container mt-5">
         <div className="text-center ">
           <h4 className="data-title">Data</h4>
-          <textarea rows={20} cols={40} onChange={handleChange} />
+          <textarea rows={20} cols={40} onChange={handleChange} required />
           <br />
           <button
             className="mine-button mt-5 text-center"
@@ -160,16 +174,35 @@ const MineBlock = () => {
             {/* display random numbers here */}
             {/* display priority queue here */}
             {/* display miner and */}
-            <h3 className="randomTitle">Random Numbers:</h3>
-            <div className="randnum-section ml-2">
-              {randomNumbers?.map((Miner) => {
-                return (
-                  <div className="randnum" key={Miner._id}>
-                    {Miner.nameName} --{">"}
-                    <span className="number"> {Miner.randomNumber}</span>
-                  </div>
-                );
-              })}
+            <div className="row">
+              <div className="col">
+                <h3 className="randomTitle">Random Numbers:</h3>
+                <div className="randnum-section ml-2 ">
+                  {randomNumbers?.map((Miner) => {
+                    return (
+                      <div className="randnum" key={Miner._id}>
+                        {Miner.nameName} --{">"}
+                        <span className="number"> {Miner.randomNumber}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="timer-wrapper col">
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={15}
+                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                  colorsTime={[10, 6, 3, 0]}
+                  onComplete={() => {
+                    // do your stuff here
+                    failMine();
+                    return { shouldRepeat: true, delay: 2 }; // repeat animation in 1.5 seconds
+                  }}
+                >
+                  {renderTime}
+                </CountdownCircleTimer>
+              </div>
             </div>
             <h3 className="randomTitle mt-2">Priority Queue</h3>
             <div className="randnum-section">
@@ -186,28 +219,19 @@ const MineBlock = () => {
               <h4 className="randomTitle mt-2">Selected Miner</h4>
               {/* <h3 className="MinerTitle randnum-section">{priorityqueue.length!=0?priorityqueue[0].nameName:"dummy"}</h3> */}
               <h3 className="MinerTitle randnum-section">{miner}</h3>
-              <button className="btn btn-success" onClick={successMine}>
-                Mine
-              </button>
-              {/* <button className="btn btn-danger" onClick={failMine}>No</button> */}
-              <div className="timer-wrapper">
-                <CountdownCircleTimer
-                  isPlaying
-                  duration={10}
-                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-                  colorsTime={[10, 6, 3, 0]}
-                  onComplete={() => {
-                    // do your stuff here
-                    failMine();
-                    return { shouldRepeat: true, delay: 2 }; // repeat animation in 1.5 seconds
-                  }}
-                >
-                  {renderTime}
-                </CountdownCircleTimer>
+              <div className="row">
+                <div className="col mb-4">
+                  <button
+                    className="btn btn-success mineButton"
+                    onClick={successMine}
+                  >
+                    Mine
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        ) : loading ? (
+        ) : loading && data ? (
           <div className="mt-4 text-center">
             <h3 className="loadingBox">Generating Random Numbers...</h3>
           </div>
