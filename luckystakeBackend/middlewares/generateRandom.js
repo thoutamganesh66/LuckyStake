@@ -2,15 +2,42 @@ const minermodel=require('../Models/miner');
 const BlockDataModel=require('../Models/BlockData');
 const minerMapModel=require('../Models/minerMap');
 let minermaps=[]
+
 //let minerarray=[];
 //let topminers=[];
 //let minerMapData;
 const tempDataModel=require('../Models/tempdata');
 const randomGenerater=async function(req,res)
 {
+    var neededstake=0;
+    var updatedstake=0;
     minermaps=[];
     //minerarray=[];
     const miners=await minermodel.find();
+    miners.forEach(async mine=>{
+        if(mine.stake <100)
+        {
+         neededstake=100-mine.stake;
+            if(mine.reward>=neededstake)
+            {
+                updatedstake=neededstake;
+                await minermodel.updateOne({name:mine.name},
+                    {
+                        $inc:{stake:neededstake}
+                    })
+                    await minermodel.updateOne({name:mine.name},
+                        {
+                            $inc:{reward:-neededstake}
+                        })
+            }
+            else
+            {
+                await minermodel.deleteMany({name:mine.name})
+               
+            }
+          
+        }
+    })
     await BlockDataModel.deleteMany({id:12345})
     const data=req.body;
     BlockDataModel.create(data);
@@ -25,6 +52,7 @@ const randomGenerater=async function(req,res)
         "nameName":miner.name,
         "randomNumber":key,
     }
+    if(miner.stake+updatedstake>=100)
     minermaps.push(minermap);
 })
     res.json({

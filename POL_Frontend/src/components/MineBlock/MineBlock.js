@@ -176,8 +176,8 @@ const MineBlock = () => {
             {/* display miner and */}
             <div className="row">
               <div className="col">
-                <h3 className="randomTitle">Random Numbers:</h3>
-                <div className="randnum-section ml-2 ">
+                <h3 className="randomTitle text-center">Random Numbers</h3>
+                {/* <div className="randnum-section ml-2 ">
                   {randomNumbers?.map((Miner) => {
                     return (
                       <div className="randnum" key={Miner._id}>
@@ -186,6 +186,20 @@ const MineBlock = () => {
                       </div>
                     );
                   })}
+                </div> */}
+                <div className="randsection mt-4">
+                  <table className="table table-striped">
+                    <tbody>
+                      {randomNumbers?.map((Miner) => {
+                        return (
+                          <tr>
+                            <td>{Miner.nameName}</td>
+                            <td>{Miner.randomNumber}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div className="timer-wrapper col">
@@ -238,13 +252,6 @@ const MineBlock = () => {
         ) : (
           <></>
         )}
-        {/* {
-                    available?
-                    <Redirect to="/"></Redirect>
-                    :
-                    <>
-                    </>
-                } */}
       </div>
     </div>
   );

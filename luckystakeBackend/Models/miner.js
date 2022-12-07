@@ -4,7 +4,6 @@ const minerSchema= mongoose.Schema({
     name:{
         type:"String",
         required: true,
-        unique: true,
     },
     stake:{
         type: Number,

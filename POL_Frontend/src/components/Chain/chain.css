@@ -1,8 +1,6 @@
 .dataBlock {
     width: 100%;
     border: 1px solid grey;
-    /* padding:0.5rem; */
-    /* overflow-x: scroll; */
 }
 
 table {

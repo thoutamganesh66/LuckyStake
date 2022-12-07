@@ -27,6 +27,10 @@ const sendResponse= async function(req,res,next)
                 {
                     $inc:{stake:-50}
                 })
+                await minermodel.updateOne({name:miner},
+                    {
+                        $inc:{balance:-50}
+                    })
             await tempDataModel.updateOne(
                 {name:"lokya"}, {$pop:{priorityMiners: 1}}
                )
